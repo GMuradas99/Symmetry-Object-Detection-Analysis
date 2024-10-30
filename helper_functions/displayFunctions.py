@@ -27,6 +27,23 @@ def imRead(path: str):
 
     return img
 
+# Remove negative coordinates from list
+def removeNegativeCoordinates(points, height, width):
+    result = []
+    for point in points:
+        x = point[0]
+        y = point[1]
+        if x < 0:
+            x = 0
+        if y < 0:
+            y = 0
+        if x > width:
+            x = width
+        if y > height:
+            y = height
+        result.append((x,y))
+    return result
+
 ### DRAWERS ###
 
 def drawAxis(mask, row, thickness = 3, color = 1):
@@ -82,6 +99,41 @@ def drawBB(img: np.ndarray, row, thicknessAxis = 1, thicknessRectangle = 1, colo
     return img
 
 ### OPERATIONS ###
+
+def crop_image(img: np.ndarray, row) -> np.ndarray:
+    """
+    Crops and rotates a given image based on the bounding box parameters provided in the row.
+    Args:
+        img (numpy.ndarray): The input image to be cropped.
+        row (dict): A dictionary containing the bounding box parameters:
+            - 'width_box' (int): The width of the bounding box.
+            - 'height_box' (int): The height of the bounding box.
+            - 'centerX' (int): The x-coordinate of the center of the bounding box.
+            - 'centerY' (int): The y-coordinate of the center of the bounding box.
+            - 'rotation' (float): The rotation angle of the bounding box in degrees.
+    Returns:
+        numpy.ndarray: The cropped and rotated image.
+    """
+
+    width = row['width_box']
+    height = row['height_box']
+    centerX = row['centerX']
+    centerY = row['centerY']
+    rotation = row['rotation']
+
+    # Calculating the bounding box
+    pts = [(centerX-width/2 , centerY-height/2), (centerX+width/2 , centerY-height/2), 
+           (centerX+width/2 , centerY+height/2), (centerX-width/2 , centerY+height/2)]
+    
+    # Removing negative coordinates
+    pts = removeNegativeCoordinates(pts, img.shape[0], img.shape[1])
+
+    # Rotating and cropping image
+    rotationMatrix = cv2.getRotationMatrix2D((centerX,centerY),rotation,1)
+    img = cv2.warpAffine(img,rotationMatrix,(img.shape[1], img.shape[0]))
+    img = img[int(pts[0][1]):int(pts[0][1])+int(height), int(pts[0][0]):int(pts[0][0]+width)]
+
+    return img
 
 def transformKeypoints(keypoints: list, rotationMatrix: np.ndarray):
     """Returns a list with all the transformmed keypoints
