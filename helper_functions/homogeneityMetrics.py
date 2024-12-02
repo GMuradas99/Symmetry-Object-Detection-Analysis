@@ -89,7 +89,7 @@ def edge_density(img_orig: np.ndarray, mask: np.ndarray, row: pd.core.series.Ser
     gray_orig = cv2.cvtColor(img_orig, cv2.COLOR_BGR2GRAY)
 
     # Compute the Canny edge detection on the grayscale image
-    edges_orig = cv2.Canny(gray_orig, 100, 200)
+    edges_orig = cv2.Canny(gray_orig, threshold1, threshold2)
     edges_orig_cut = display.crop_image(edges_orig, row)
     edges = np.where(edges_orig_cut > 0, 1, 0)
 
