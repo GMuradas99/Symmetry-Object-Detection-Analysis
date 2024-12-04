@@ -25,7 +25,7 @@ def glcm(img_color: np.ndarray, mask: np.ndarray) -> float:
 
     # Compute GLCM on masked pixels (reshape for GLCM input)
     distances = [1]
-    angles = [0, np.pi/4, np.pi/2, 3*np.pi/4]
+    angles = [0, np.pi/4, np.pi/2, 0]
     glcm = graycomatrix(masked_pixels.reshape(-1, 1), distances, angles, levels=256, symmetric=True, normed=True)
 
     # Calculate homogeneity
