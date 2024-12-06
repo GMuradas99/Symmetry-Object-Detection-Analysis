@@ -68,15 +68,15 @@ def drawAxis(mask, row, thickness = 3, color = 1):
 
     return mask
 
-def drawRectangle(img: np.ndarray, points: list, thickness = 1):
+def drawRectangle(img: np.ndarray, points: list, thickness = 1, color = [0,255,0]):
     """Draws rectangle on the image
     """
-    cv2.line(img, (int(points[0][0]),int(points[0][1])), (int(points[1][0]),int(points[1][1])), [0,255,0], thickness)
-    cv2.line(img, (int(points[1][0]),int(points[1][1])), (int(points[2][0]),int(points[2][1])), [0,255,0], thickness)
-    cv2.line(img, (int(points[2][0]),int(points[2][1])), (int(points[3][0]),int(points[3][1])), [0,255,0], thickness)
-    cv2.line(img, (int(points[3][0]),int(points[3][1])), (int(points[0][0]),int(points[0][1])), [0,255,0], thickness)
+    cv2.line(img, (int(points[0][0]),int(points[0][1])), (int(points[1][0]),int(points[1][1])), color, thickness)
+    cv2.line(img, (int(points[1][0]),int(points[1][1])), (int(points[2][0]),int(points[2][1])), color, thickness)
+    cv2.line(img, (int(points[2][0]),int(points[2][1])), (int(points[3][0]),int(points[3][1])), color, thickness)
+    cv2.line(img, (int(points[3][0]),int(points[3][1])), (int(points[0][0]),int(points[0][1])), color, thickness)
 
-def drawBB(img: np.ndarray, row, thicknessAxis = 1, thicknessRectangle = 1, colorAxis = [255,0,0]):
+def drawBB(img: np.ndarray, row, thicknessAxis = 1, thicknessRectangle = 1, colorAxis = [255,0,0], colorRectangle = [0,255,0]):
     """Draws the bounding box of the row on an img
     """
     # Getting bounding box points
@@ -94,7 +94,7 @@ def drawBB(img: np.ndarray, row, thicknessAxis = 1, thicknessRectangle = 1, colo
     cv2.line(img, (int(startAxis[0]),int(startAxis[1])), (int(endAxis[0]),int(endAxis[1])), colorAxis, thicknessAxis)
 
     # Drawing rencangle of bounding box
-    drawRectangle(img, pts, thicknessRectangle)
+    drawRectangle(img, pts, thicknessRectangle, colorRectangle)
 
     return img
 
